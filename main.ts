@@ -18,3 +18,10 @@ if (/\n|\r/.test(LINE) || LINE.trim() !== LINE || LINE.trim().length === 0) {
 
 mkdirSync("/output", { recursive: true });
 writeFileSync("/output/entry.txt", LINE, "utf8");
+
+// Read back and verify: the bytes on disk must be exactly the gated line.
+import { readFileSync } from "node:fs";
+const written = readFileSync("/output/entry.txt", "utf8");
+if (written !== LINE) {
+  throw new Error("entry.txt on disk does not match the gated line");
+}
